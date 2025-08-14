@@ -1,9 +1,11 @@
-const express = require("express");
+const express = require("express"); // convert to import later
+import { type Request, type Response } from "express";
+
 const app = express();
 
 app.use(express.static("public"));
 
-app.get("/", function (req, res) {
+app.get("/", function (req: Request, res: Response) {
   res.json({ message: "hello from server!" });
 });
 
