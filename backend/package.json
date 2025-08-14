@@ -1,11 +1,11 @@
 {
   "name": "plan-it-server",
   "version": "1.0.0",
-  "main": "server.ts",
+  "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "devStart": "nodemon server.ts",
-    "start": "node server.ts",
+    "devStart": "nodemon api/index.ts",
+    "start": "node api/index.ts",
     "build": "npm i"
   },
   "repository": {
