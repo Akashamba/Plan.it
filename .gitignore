@@ -1,2 +1,4 @@
 # backend ignores
 backend/node_modules
+backend/.env
+backend/drizzle/
