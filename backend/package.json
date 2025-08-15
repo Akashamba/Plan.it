@@ -6,8 +6,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "devStart": "nodemon api/index.ts",
     "start": "npx tsx api/index.ts",
-    "build": "esbuild api/server.ts --bundle --outfile=api/index.js --platform=node --packages=external",
-    "vercel-build": "esbuild api/server.ts --bundle --outfile=api/index.js --platform=node --packages=external"
+    "build": "esbuild server.ts --bundle --outfile=api/index.js --platform=node --packages=external",
+    "vercel-build": "esbuild server.ts --bundle --outfile=api/index.js --platform=node --packages=external"
   },
   "repository": {
     "type": "git",
