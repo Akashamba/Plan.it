@@ -1,8 +1,8 @@
 import express from "express";
 import { type Request, type Response } from "express";
 import dotenv from "dotenv";
-import db from "../db/index.js";
-import { usersTable } from "../db/schema.js";
+import db from "../db/index";
+import { usersTable } from "../db/schema";
 
 dotenv.config();
 const app = express();

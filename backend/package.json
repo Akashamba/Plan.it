@@ -2,12 +2,11 @@
   "name": "plan-it-server",
   "version": "1.0.0",
   "main": "index.ts",
-  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "devStart": "nodemon api/index.ts",
     "start": "npx tsx api/index.ts",
-    "build": "npm i"
+    "build": "esbuild api/index.ts --bundle --outfile=api/out.js --platform=node --packages=external"
   },
   "repository": {
     "type": "git",
@@ -30,6 +29,7 @@
     "@types/express": "^5.0.3",
     "@types/node": "^24.2.1",
     "drizzle-kit": "^0.31.4",
+    "esbuild": "0.25.9",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.4",
     "typescript": "^5.9.2"
