@@ -1,5 +1,4 @@
-import express from "express";
-import { type Request, type Response } from "express";
+import express, { type Request, type Response } from "express";
 import dotenv from "dotenv";
 import db from "./db/index";
 import { usersTable } from "./db/schema";
@@ -30,4 +29,4 @@ app.post("/new-user", async function (req: Request, res: Response) {
 
 app.listen(3000, () => console.log("Server ready on port 3000."));
 
-module.exports = app;
+// module.exports = app;
