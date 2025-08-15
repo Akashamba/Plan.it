@@ -2,4 +2,4 @@
 backend/node_modules
 backend/.env
 backend/drizzle/
-backend/api/out.js
+backend/api/*.js
