@@ -2,11 +2,16 @@ import express, { type Request, type Response } from "express";
 import dotenv from "dotenv";
 import db from "./db/index";
 import { fakeuserstable } from "./db/schema";
+import { auth } from "./auth";
+import { toNodeHandler } from "better-auth/node";
 
 dotenv.config();
 const app = express();
 
-app.use(express.static("public"));
+// auth routes
+app.all("/api/auth/{*any}", toNodeHandler(auth));
+
+app.use(express.json());
 
 app.get("/", async function (req: Request, res: Response) {
   const users = await db.select().from(fakeuserstable);
