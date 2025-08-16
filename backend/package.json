@@ -7,7 +7,9 @@
     "devStart": "nodemon server.ts",
     "start": "npx tsx server.ts",
     "lint": "eslint . --ext .js,.ts,.tsx",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db:generate": "npx drizzle-kit generate",
+    "db:migrate": "npx drizzle-kit migrate"
   },
   "repository": {
     "type": "git",
@@ -21,6 +23,7 @@
   "homepage": "https://github.com/Akashamba/Plan.it#readme",
   "dependencies": {
     "@neondatabase/serverless": "^1.0.1",
+    "better-auth": "^1.3.6",
     "dotenv": "^17.2.1",
     "drizzle-orm": "^0.44.4",
     "express": "^5.1.0",
@@ -28,7 +31,7 @@
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
-    "@types/node": "^24.2.1",
+    "@types/node": "^24.3.0",
     "drizzle-kit": "^0.31.4",
     "eslint": "^9.33.0",
     "ts-node": "^10.9.2",
