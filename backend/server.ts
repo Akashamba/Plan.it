@@ -1,7 +1,7 @@
 import express, { type Request, type Response } from "express";
 import dotenv from "dotenv";
 import db from "./db/index";
-import { usersTable } from "./db/schema";
+import { fakeuserstable } from "./db/schema";
 
 dotenv.config();
 const app = express();
@@ -9,19 +9,19 @@ const app = express();
 app.use(express.static("public"));
 
 app.get("/", async function (req: Request, res: Response) {
-  const users = await db.select().from(usersTable);
+  const users = await db.select().from(fakeuserstable);
   console.log("Getting all users from the database: ", users);
   res.json({ users: users });
 });
 
 app.post("/new-user", async function (req: Request, res: Response) {
-  const user: typeof usersTable.$inferInsert = {
+  const user: typeof fakeuserstable.$inferInsert = {
     name: "John",
     age: 30,
     email: "john@example.com",
   };
 
-  await db.insert(usersTable).values(user);
+  await db.insert(fakeuserstable).values(user);
   console.log("New user created!");
 
   res.json({ message: "success" });
