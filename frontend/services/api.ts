@@ -7,7 +7,7 @@ export const fetchData = async () => {
   });
 
   if (!response.ok) {
-    // @ts-ignore
+    // @ts-expect-error desc
     throw new Error("Failed to fetch", response.statusText);
   }
 

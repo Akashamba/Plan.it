@@ -5,7 +5,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "devStart": "nodemon server.ts",
-    "start": "npx tsx server.ts"
+    "start": "npx tsx server.ts",
+    "lint": "eslint . --ext .js,.ts,.tsx",
+    "typecheck": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
@@ -28,6 +30,7 @@
     "@types/express": "^5.0.3",
     "@types/node": "^24.2.1",
     "drizzle-kit": "^0.31.4",
+    "eslint": "^9.33.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.4",
     "typescript": "^5.9.2"
