@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/Akashamba/Plan.it#readme",
   "dependencies": {
+    "@better-auth/expo": "^1.3.6",
     "@neondatabase/serverless": "^1.0.1",
     "better-auth": "^1.3.6",
     "dotenv": "^17.2.1",

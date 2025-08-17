@@ -2,8 +2,10 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import db from "./db"; // your drizzle instance
 import { account, session, user, verification } from "./db/auth-schema";
+import { expo } from "@better-auth/expo";
 
 export const auth = betterAuth({
+  plugins: [expo()],
   database: drizzleAdapter(db, {
     provider: "pg", // or "mysql", "sqlite"
     schema: {
@@ -19,4 +21,5 @@ export const auth = betterAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     },
   },
+  trustedOrigins: ["planit://", "exp://172.31.161.169:8081/--/(tabs)/two"],
 });

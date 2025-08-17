@@ -10,6 +10,10 @@ const app = express();
 
 // auth routes
 app.all("/api/auth/{*any}", toNodeHandler(auth));
+// app.all("/api/auth/{*any}", () => {
+//   console.log("object");
+//   toNodeHandler(auth);
+// });
 
 app.use(express.json());
 

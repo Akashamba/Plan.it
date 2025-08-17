@@ -1,28 +1,28 @@
 import { StyleSheet } from "react-native";
-
-import EditScreenInfo from "@/components/EditScreenInfo";
-import { Text, View } from "@/components/Themed";
+import { Text, View, Button } from "react-native";
+import { authClient } from "@/lib/auth-client";
 import useFetch from "@/services/hooks";
 import { fetchData } from "@/services/api";
+import { Link } from "expo-router";
 
 export default function TabOneScreen() {
   const { data, loading, error } = useFetch(() => fetchData());
 
+  const handleLogin = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/(tabs)/two", // this will be converted to a deep link (eg. `myapp://dashboard`) on native
+    });
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <Text>{process.env.EXPO_PUBLIC_API_URL}</Text>
+    <View>
       {loading && <Text style={styles.title}>Loading...</Text>}
       {error && <Text style={styles.title}>Error: {error.message}</Text>}
       {!loading && !error && (
         <Text style={styles.title}>{data?.users[0].name}</Text>
       )}
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
+      <Button title="Login with Google" onPress={handleLogin} />;
     </View>
   );
 }
