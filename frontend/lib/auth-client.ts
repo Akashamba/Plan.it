@@ -6,8 +6,8 @@ export const authClient = createAuthClient({
   baseURL: `${process.env.EXPO_PUBLIC_API_URL}`, // Base URL of your Better Auth backend.
   plugins: [
     expoClient({
-      scheme: "myapp",
-      storagePrefix: "myapp",
+      scheme: "planit",
+      storagePrefix: "planit",
       storage: SecureStore,
     }),
   ],

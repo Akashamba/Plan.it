@@ -17,9 +17,11 @@ export const auth = betterAuth({
   }),
   socialProviders: {
     google: {
+      prompt: "select_account",
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     },
   },
-  trustedOrigins: ["planit://", "exp://172.31.161.169:8081/--/(tabs)/two"],
+  // TODO: make this dynamic
+  trustedOrigins: ["exp://*"],
 });

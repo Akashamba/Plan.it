@@ -1,45 +1,32 @@
-import { StyleSheet } from "react-native";
-import { Text, View, Button } from "react-native";
+import { Text } from "@/components/Themed";
 import { authClient } from "@/lib/auth-client";
-import useFetch from "@/services/hooks";
-import { fetchData } from "@/services/api";
-import { Link } from "expo-router";
+import { Alert, Button } from "react-native";
 
-export default function TabOneScreen() {
-  const { data, loading, error } = useFetch(() => fetchData());
-
+export default function SocialSignIn() {
   const handleLogin = async () => {
     await authClient.signIn.social({
       provider: "google",
-      callbackURL: "/(tabs)/two", // this will be converted to a deep link (eg. `myapp://dashboard`) on native
+      callbackURL: "/dashboard", // TODO: Callback not working
     });
   };
 
+  const handleLogOut = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          Alert.alert("signed out");
+        },
+      },
+    });
+  };
+
+  const { data: session } = authClient.useSession();
+
   return (
-    <View>
-      {loading && <Text style={styles.title}>Loading...</Text>}
-      {error && <Text style={styles.title}>Error: {error.message}</Text>}
-      {!loading && !error && (
-        <Text style={styles.title}>{data?.users[0].name}</Text>
-      )}
-      <Button title="Login with Google" onPress={handleLogin} />;
-    </View>
+    <>
+      <Button title="Login with Google" onPress={handleLogin} />
+      <Button title="Logout" onPress={handleLogOut} />;
+      <Text>{session?.user.name || "no user"}</Text>
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-});
