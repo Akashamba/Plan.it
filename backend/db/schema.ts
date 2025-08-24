@@ -1,4 +1,8 @@
-import { integer, pgTable, varchar } from "drizzle-orm/pg-core";
+import { integer, pgTable, pgTableCreator, varchar } from "drizzle-orm/pg-core";
+
+export const createTable = pgTableCreator(
+  (name) => `${process.env.TABLES_PREFIX}_${name}`
+);
 
 // temp fake table
 export const fakeuserstable = pgTable("fakeuserstable", {
