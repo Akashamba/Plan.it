@@ -4,6 +4,11 @@ import db from "./db"; // your drizzle instance
 import { account, session, user, verification } from "./db/auth-schema";
 import { expo } from "@better-auth/expo";
 
+const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = process.env;
+if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
+  throw new Error("Missing GOOGLE_CLIENT_ID/GOOGLE_CLIENT_SECRET");
+}
+
 export const auth = betterAuth({
   plugins: [expo()],
   database: drizzleAdapter(db, {
@@ -18,8 +23,8 @@ export const auth = betterAuth({
   socialProviders: {
     google: {
       prompt: "select_account",
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      clientId: GOOGLE_CLIENT_ID,
+      clientSecret: GOOGLE_CLIENT_SECRET,
     },
   },
   trustedOrigins: [""],

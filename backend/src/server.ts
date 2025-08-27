@@ -3,14 +3,13 @@ import express, {
   type Response,
   type NextFunction,
 } from "express";
-import dotenv from "dotenv";
+import "dotenv/config";
 import db from "./db/index";
 import { fakeuserstable } from "./db/schema";
 import { auth } from "./auth";
 import { toNodeHandler } from "better-auth/node";
 import cors from "cors";
 
-dotenv.config();
 const app = express();
 
 app.use(
