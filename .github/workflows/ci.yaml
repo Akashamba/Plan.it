@@ -21,6 +21,7 @@ jobs:
           node-version: 20
       - run: npm ci
       - run: npm run lint
+      - run: npx tsc --version
       - run: npm run typecheck
 
   backend:
@@ -36,4 +37,5 @@ jobs:
           node-version: 20
       - run: npm ci
       - run: npm run lint
+      - run: npx tsc --version
       - run: npm run typecheck
