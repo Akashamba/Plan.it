@@ -14,7 +14,8 @@ export const createTable = pgTableCreator(
   (name) => `${process.env.TABLES_PREFIX}_${name}`
 );
 
-// Priority enum
+// Enums
+export const statusEnum = pgEnum("status", ["completed", "not completed"]);
 export const priorityEnum = pgEnum("priority", ["low", "medium", "high"]);
 
 // Lists table
@@ -31,6 +32,7 @@ export const tasks = pgTable("tasks", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
   userId: text("user_id").notNull(),
+  status: statusEnum("status").notNull().default("not completed"),
   description: text("description"),
   priority: priorityEnum("priority"),
   listId: uuid("list_id").notNull(),
