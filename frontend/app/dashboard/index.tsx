@@ -1,5 +1,4 @@
-import { Alert, Button, StyleSheet } from "react-native";
-import { Text, View } from "@/components/Themed";
+import { Alert, Button, StyleSheet, Text, View } from "react-native";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "expo-router";
 
