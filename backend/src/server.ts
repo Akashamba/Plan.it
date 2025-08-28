@@ -1,13 +1,21 @@
-import express, { type Request, type Response } from "express";
+import express, { NextFunction, type Request, type Response } from "express";
 import "dotenv/config";
 
-import { authRouter } from "./auth";
+import { auth } from "./auth";
 import taskRouter from "./routes/task-routes";
+import { toNodeHandler } from "better-auth/node";
 
 const app = express();
 
 // auth routes
-app.use("/api/auth", authRouter);
+app.all(
+  "/api/auth/{*any}",
+  (req: Request, res: Response, next: NextFunction) => {
+    console.log(`Incoming ${req.method} request to ${req.path}`);
+    next();
+  },
+  toNodeHandler(auth)
+);
 
 app.use(express.json());
 

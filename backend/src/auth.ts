@@ -31,12 +31,3 @@ export const auth = betterAuth({
   },
   trustedOrigins: [""],
 });
-
-export const authRouter = Router().all(
-  "/{*any}",
-  (req: Request, res: Response, next: NextFunction) => {
-    console.log(`Incoming ${req.method} request to ${req.path}`);
-    next();
-  },
-  toNodeHandler(auth)
-);
