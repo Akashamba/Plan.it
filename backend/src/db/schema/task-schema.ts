@@ -1,17 +1,7 @@
-import {
-  pgTableCreator,
-  text,
-  uuid,
-  timestamp,
-  pgEnum,
-} from "drizzle-orm/pg-core";
+import { pgTable, text, uuid, timestamp, pgEnum } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { user } from "./auth-schema";
-
-// custom create table function for table prefix (similar to t3-app)
-export const createTable = pgTableCreator(
-  (name) => `${process.env.TABLES_PREFIX}_${name}`
-);
+import { createTable } from "./create-table";
 
 // Enums
 export const statusEnum = pgEnum("status", ["completed", "not completed"]);
