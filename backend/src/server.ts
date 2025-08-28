@@ -1,44 +1,24 @@
-import express, {
-  type Request,
-  type Response,
-  type NextFunction,
-} from "express";
+import express, { type Request, type Response } from "express";
 import "dotenv/config";
-import db from "./db/index";
-import { user } from "./db/schema/auth-schema";
-import { auth } from "./auth";
-import { toNodeHandler } from "better-auth/node";
-import cors from "cors";
+
+import { authRouter } from "./auth";
+import taskRouter from "./routes/task-routes";
 
 const app = express();
 
-app.use(
-  cors({
-    origin: ["http://localhost:5173"], // React app URL
-    methods: "GET,POST,PUT,DELETE",
-    credentials: true,
-  })
-);
-
 // auth routes
-// app.all("/api/auth/{*any}", toNodeHandler(auth));
-app.all(
-  "/api/auth/{*any}",
-  (req: Request, res: Response, next: NextFunction) => {
-    console.log(`Incoming ${req.method} request to ${req.path}`);
-    next();
-  },
-  toNodeHandler(auth)
-);
+app.use("/api/auth", authRouter);
 
 app.use(express.json());
 
-app.get("/", async function (req: Request, res: Response) {
-  const users = await db.select().from(user);
-  console.log("Getting all users from the database: ", users.length);
-  res.json({ users: users });
+// index route
+app.get("/", (req: Request, res: Response) => {
+  res.send("Hello from server!");
 });
 
-app.listen(3000, () => console.log("Server ready on port 3000."));
+// task routes
+app.use("/tasks", taskRouter);
 
-// module.exports = app;
+app.listen(process.env.PORT ?? 3000, () =>
+  console.log(`Server ready on port ${process.env.PORT ?? 3000}.`)
+);

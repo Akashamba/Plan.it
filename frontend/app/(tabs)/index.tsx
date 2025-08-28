@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { Alert, Button, Text } from "react-native";
 
 export default function SocialSignIn() {
-  const { data, loading, error } = useFetch(() => fetchData());
+  const { data, loading, error } = useFetch(() => fetchData("/tasks"));
   const router = useRouter();
   const { data: session } = authClient.useSession();
 
@@ -37,11 +37,17 @@ export default function SocialSignIn() {
   return (
     <>
       <Button title="Login with Google" onPress={handleLogin} />
-      <Button title="Logout" onPress={handleLogOut} />;
+      <Button title="Logout" onPress={handleLogOut} />
       <Text>{session?.user.name || "no user"}</Text>
       {loading && <Text>Loading...</Text>}
       {error && <Text>Error: {error.message}</Text>}
-      {!loading && !error && <Text>{data?.users[0].name}</Text>}
+      {!loading && !error && data?.tasks && (
+        <>
+          {data.tasks.map((task: { name: string }, idx: number) => (
+            <Text key={idx}>{task.name}</Text>
+          ))}
+        </>
+      )}
     </>
   );
 }
