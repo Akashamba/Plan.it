@@ -19,7 +19,7 @@ export const statusEnum = pgEnum("status", ["completed", "not completed"]);
 export const priorityEnum = pgEnum("priority", ["low", "medium", "high"]);
 
 // Lists table
-export const lists = pgTable("lists", {
+export const lists = createTable("lists", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
   userId: text("user_id").notNull(),
@@ -28,7 +28,7 @@ export const lists = pgTable("lists", {
 });
 
 // Tasks table
-export const tasks = pgTable("tasks", {
+export const tasks = createTable("tasks", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
   userId: text("user_id").notNull(),
