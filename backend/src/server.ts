@@ -21,7 +21,7 @@ app.use(express.json());
 
 // index route
 app.get("/", (req: Request, res: Response) => {
-  res.send("Hello from server!");
+  res.json({ message: "Hello from server!" });
 });
 
 // task routes

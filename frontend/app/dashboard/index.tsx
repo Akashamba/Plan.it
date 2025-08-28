@@ -1,8 +1,16 @@
 import { Alert, Button, StyleSheet, Text, View } from "react-native";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "expo-router";
+import useFetch from "@/services/hooks";
+import { fetchData } from "@/services/api";
 
 export default function Dashboard() {
+  const session = authClient.useSession();
+
+  const { data, loading, error } = useFetch(() =>
+    fetchData("/tasks", session.data?.session.token || "")
+  );
+
   const router = useRouter();
 
   const handleLogOut = async () => {
@@ -24,9 +32,19 @@ export default function Dashboard() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
+      <Text style={styles.title}>Authed User</Text>
       <Text>Redireted from Auth!</Text>
+      <Text>{session?.data?.user.name || "no user"}</Text>
       <Button title="Logout" onPress={handleLogOut} />;
+      {loading && <Text>Loading...</Text>}
+      {error && <Text>Error: {error.message}</Text>}
+      {!loading && !error && data?.tasks && (
+        <>
+          {data.tasks.map((task: { name: string }, idx: number) => (
+            <Text key={idx}>{task.name}</Text>
+          ))}
+        </>
+      )}
     </View>
   );
 }
