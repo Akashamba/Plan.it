@@ -5,7 +5,7 @@ import express, {
 } from "express";
 import "dotenv/config";
 import db from "./db/index";
-import { fakeuserstable } from "./db/schema";
+import { user } from "./db/schema/auth-schema";
 import { auth } from "./auth";
 import { toNodeHandler } from "better-auth/node";
 import cors from "cors";
@@ -34,22 +34,9 @@ app.all(
 app.use(express.json());
 
 app.get("/", async function (req: Request, res: Response) {
-  const users = await db.select().from(fakeuserstable);
-  console.log("Getting all users from the database: ", users);
+  const users = await db.select().from(user);
+  console.log("Getting all users from the database: ", users.length);
   res.json({ users: users });
-});
-
-app.post("/new-user", async function (req: Request, res: Response) {
-  const user: typeof fakeuserstable.$inferInsert = {
-    name: "John",
-    age: 30,
-    email: "john@example.com",
-  };
-
-  await db.insert(fakeuserstable).values(user);
-  console.log("New user created!");
-
-  res.json({ message: "success" });
 });
 
 app.listen(3000, () => console.log("Server ready on port 3000."));
