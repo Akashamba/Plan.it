@@ -3,45 +3,30 @@ import db from "../db";
 import { lists as listsTable } from "../db/schema/task-schema";
 import { session as sessionTable } from "../db/schema/auth-schema";
 import { and, eq, gt } from "drizzle-orm";
+import { authCheck } from "../utils/auth-check";
 
 const listRouter = Router();
 
-listRouter.get("/all", async function (req: Request, res: Response) {
-  const authHeader = req.headers.authorization;
-  const token = authHeader?.startsWith("Bearer ")
-    ? authHeader.split(" ")[1]
-    : null;
-
-  if (!token) {
-    return res.status(401).json({ error: "Unauthorized: No token provided" });
-  }
-
+listRouter.get("/all", authCheck, async function (req: Request, res: Response) {
   try {
-    const userSession = await db
-      .select()
-      .from(sessionTable)
-      .where(
-        and(
-          eq(sessionTable.token, token),
-          gt(sessionTable.expiresAt, new Date())
-        )
-      );
+    const currentUserId = req.userId;
 
-    if (userSession.length === 0) {
-      return res.status(401).json({ error: "Unauthorized: Invalid token" });
+    if (currentUserId) {
+      const lists = await db
+        .select()
+        .from(listsTable)
+        .where(eq(listsTable.userId, currentUserId));
+
+      console.log("Getting lists from the database: ", lists.length);
+      res.json({ lists });
     }
-
-    const lists = await db
-      .select()
-      .from(listsTable)
-      .where(eq(listsTable.userId, userSession[0].userId));
-
-    console.log("Getting lists from the database: ", lists.length);
-    res.json({ lists });
   } catch (error) {
     console.error("Database error:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
 });
+
+// GET all tasks of a user from the given list (should this be in list router)
+listRouter.get("/:listId", async function (req: Request, res: Response) {});
 
 export default listRouter;

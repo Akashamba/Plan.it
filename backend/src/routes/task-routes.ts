@@ -10,11 +10,12 @@ const taskRouter = Router();
 // /api/tasks/all: GET all tasks of a user
 taskRouter.get("/all", authCheck, async function (req: Request, res: Response) {
   try {
-    if (req.userId) {
+    const currentUserId = req.userId;
+    if (currentUserId) {
       const tasks = await db
         .select()
         .from(tasksTable)
-        .where(eq(tasksTable.userId, req.userId));
+        .where(eq(tasksTable.userId, currentUserId));
 
       console.log("Getting tasks from the database: ", tasks.length);
 
@@ -26,26 +27,21 @@ taskRouter.get("/all", authCheck, async function (req: Request, res: Response) {
   }
 });
 
-// GET all tasks of a user from the given list (should this be in list router)
-taskRouter.get("/:listId", async function (req: Request, res: Response) {});
-
 // GET a specific task
 taskRouter.get("/:id", authCheck, async function (req: Request, res: Response) {
-  console.log("object");
   try {
-    if (req.userId) {
+    const currentUserId = req.userId;
+    if (currentUserId) {
       const task = await db
         .selectDistinct()
         .from(tasksTable)
         .where(
           and(
             eq(tasksTable.id, req.params.id),
-            eq(tasksTable.userId, req.userId)
+            eq(tasksTable.userId, currentUserId)
           )
         );
       res.json(task[0]);
-    } else {
-      res.status(500).json({ error: "user id not found" });
     }
   } catch (error) {
     console.error("Database error:", error);
@@ -63,7 +59,6 @@ taskRouter.post("/", authCheck, async function (req: Request, res: Response) {
         .values({ ...newTask, userId: currentUserId })
         .returning();
 
-      // console.log(result);
       res.json({ message: "success", task: task });
     }
   } catch (error) {

@@ -8,7 +8,6 @@ export const authCheck = async (
   res: Response,
   next: NextFunction
 ) => {
-  console.log("object 1");
   const authHeader = req.headers.authorization;
   const token = authHeader?.startsWith("Bearer ")
     ? authHeader.split(" ")[1]
