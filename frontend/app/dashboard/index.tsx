@@ -8,7 +8,7 @@ export default function Dashboard() {
   const session = authClient.useSession();
 
   const { data, loading, error } = useFetch(() =>
-    fetchData("/tasks", session.data?.session.token || "")
+    fetchData("/api/task/all", session.data?.session.token)
   );
 
   const router = useRouter();

@@ -4,6 +4,7 @@ import "dotenv/config";
 import { auth } from "./auth";
 import taskRouter from "./routes/task-routes";
 import { toNodeHandler } from "better-auth/node";
+import listRouter from "./routes/list-routes";
 
 const app = express();
 
@@ -25,7 +26,10 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 // task routes
-app.use("/tasks", taskRouter);
+app.use("/api/task", taskRouter);
+
+// list routes
+app.use("/api/list", listRouter);
 
 app.listen(process.env.PORT ?? 3000, () =>
   console.log(`Server ready on port ${process.env.PORT ?? 3000}.`)
