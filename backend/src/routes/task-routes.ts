@@ -49,22 +49,55 @@ taskRouter.get("/:id", authCheck, async function (req: Request, res: Response) {
   }
 });
 
-taskRouter.post("/", authCheck, async function (req: Request, res: Response) {
+// UPDATE a specific task
+taskRouter.put("/:id", authCheck, async function (req: Request, res: Response) {
   try {
-    const newTask = req.body.newTask;
     const currentUserId = req.userId;
-    if (currentUserId) {
-      const [task] = await db
-        .insert(tasksTable)
-        .values({ ...newTask, userId: currentUserId })
+    const updatedTask = req.body.updatedTask;
+    if (currentUserId && updatedTask) {
+      const task = await db
+        .update(tasksTable)
+        .set(updatedTask)
+        .where(
+          and(
+            eq(tasksTable.id, req.params.id),
+            eq(tasksTable.userId, currentUserId)
+          )
+        )
         .returning();
-
-      res.json({ message: "success", task: task });
+      res.json(task[0]);
     }
   } catch (error) {
     console.error("Database error:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
 });
+
+// DELETE a specific task
+taskRouter.delete(
+  "/:id",
+  authCheck,
+  async function (req: Request, res: Response) {
+    try {
+      const currentUserId = req.userId;
+      if (currentUserId) {
+        const task = await db
+          .delete(tasksTable)
+          .where(
+            and(
+              eq(tasksTable.id, req.params.id),
+              eq(tasksTable.userId, currentUserId)
+            )
+          )
+          .returning();
+
+        res.json({ task: task });
+      }
+    } catch (error) {
+      console.error("Database error:", error);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  }
+);
 
 export default taskRouter;
