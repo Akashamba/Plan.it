@@ -53,6 +53,14 @@ taskRouter.put("/:id", authCheck, async function (req: Request, res: Response) {
   try {
     const currentUserId = req.userId;
     const updatedTask = req.body;
+
+    if (updatedTask.startDate) {
+      updatedTask.startDate = new Date(updatedTask.startDate);
+    }
+    if (updatedTask.endDate) {
+      updatedTask.endDate = new Date(updatedTask.endDate);
+    }
+
     if (currentUserId && updatedTask) {
       const task = await db
         .update(tasksTable)
