@@ -51,6 +51,36 @@ taskRouter.get(
   }
 );
 
+// GET all tasks due on or before today
+taskRouter.get(
+  "/today",
+  authCheck,
+  async function (req: Request, res: Response) {
+    const { userId: currentUserId } = req;
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);
+
+    if (currentUserId) {
+      try {
+        const tasks = await db
+          .select()
+          .from(tasksTable)
+          .where(
+            and(
+              eq(tasksTable.userId, currentUserId),
+              lt(tasksTable.startDate, tomorrow)
+            )
+          );
+        res.json(tasks);
+      } catch (error) {
+        console.error("Database error:", error);
+        return res.status(500).json({ error: "Internal server error" });
+      }
+    }
+  }
+);
+
 // GET a specific task
 taskRouter.get("/:id", authCheck, async function (req: Request, res: Response) {
   try {
