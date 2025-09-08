@@ -7,7 +7,7 @@ import { authCheck } from "../utils/auth-check";
 
 const listRouter = Router();
 
-listRouter.get("/all", authCheck, async function (req: Request, res: Response) {
+listRouter.get("/", authCheck, async function (req: Request, res: Response) {
   try {
     const currentUserId = req.userId;
 
@@ -26,7 +26,28 @@ listRouter.get("/all", authCheck, async function (req: Request, res: Response) {
   }
 });
 
-// GET all tasks of a user from the given list (should this be in list router)
-listRouter.get("/:listId", async function (req: Request, res: Response) {});
+// GET all info about a given list
+listRouter.get("/:id", authCheck, async function (req: Request, res: Response) {
+  try {
+    const currentUserId = req.userId;
+
+    if (currentUserId) {
+      const lists = await db.query.lists.findFirst({
+        where: and(
+          eq(listsTable.userId, currentUserId),
+          eq(listsTable.id, req.params.id)
+        ),
+        with: {
+          tasks: true,
+        },
+      });
+
+      res.json({ lists });
+    }
+  } catch (error) {
+    console.error("Database error:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 export default listRouter;

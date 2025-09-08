@@ -26,10 +26,10 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 // task routes
-app.use("/api/task", taskRouter);
+app.use("/api/tasks", taskRouter);
 
 // list routes
-app.use("/api/list", listRouter);
+app.use("/api/lists", listRouter);
 
 app.listen(process.env.PORT ?? 3000, () =>
   console.log(`Server ready on port ${process.env.PORT ?? 3000}.`)

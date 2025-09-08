@@ -13,7 +13,7 @@ import { getNextDate } from "../utils/get-next-date";
 
 const taskRouter = Router();
 
-// /api/tasks/all: GET all tasks of a user
+// /api/tasks/: GET all tasks of a user (with filters)
 taskRouter.get(
   "/",
   authCheck,
