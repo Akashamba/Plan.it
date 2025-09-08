@@ -3,28 +3,53 @@ import db from "../db";
 import { tasks as tasksTable } from "../db/schema/task-schema";
 import { and, eq, gte, lt } from "drizzle-orm";
 import { authCheck } from "../utils/auth-check";
+import {
+  createTaskSchema,
+  taskQuerySchema,
+  updateTaskSchema,
+} from "../schema/task.schema";
+import { validateBody, validateQuery } from "../utils/validation";
+import { getNextDate } from "../utils/get-next-date";
 
 const taskRouter = Router();
 
 // /api/tasks/all: GET all tasks of a user
-taskRouter.get("/all", authCheck, async function (req: Request, res: Response) {
-  try {
-    const currentUserId = req.userId;
+taskRouter.get(
+  "/",
+  authCheck,
+  validateQuery(taskQuerySchema),
+  async function (req: Request, res: Response) {
+    const { userId: currentUserId, validatedQuery } = req;
+
     if (currentUserId) {
-      const tasks = await db
-        .select()
-        .from(tasksTable)
-        .where(eq(tasksTable.userId, currentUserId));
+      // Add filters based on query params
+      const filters = [eq(tasksTable.userId, currentUserId)];
 
-      console.log("Getting tasks from the database: ", tasks.length);
+      if (validatedQuery.dueDate) {
+        const dueDate = new Date(validatedQuery.dueDate);
+        filters.push(
+          gte(tasksTable.startDate, dueDate),
+          lt(tasksTable.startDate, getNextDate(dueDate))
+        );
+      }
 
-      res.json({ tasks });
+      // Fetch data from db
+      try {
+        const tasks = await db
+          .select()
+          .from(tasksTable)
+          .where(and(...filters));
+
+        console.log("Getting tasks from the database: ", tasks.length);
+
+        res.json({ tasks });
+      } catch (error) {
+        console.error("Database error:", error);
+        return res.status(500).json({ error: "Internal server error" });
+      }
     }
-  } catch (error) {
-    console.error("Database error:", error);
-    return res.status(500).json({ error: "Internal server error" });
   }
-});
+);
 
 // GET a specific task
 taskRouter.get("/:id", authCheck, async function (req: Request, res: Response) {
@@ -49,36 +74,40 @@ taskRouter.get("/:id", authCheck, async function (req: Request, res: Response) {
 });
 
 // UPDATE a specific task
-taskRouter.put("/:id", authCheck, async function (req: Request, res: Response) {
-  try {
-    const currentUserId = req.userId;
-    const updatedTask = req.body;
+taskRouter.put(
+  "/:id",
+  authCheck,
+  validateBody(updateTaskSchema),
+  async function (req: Request, res: Response) {
+    try {
+      const { userId: currentUserId, validatedBody } = req;
 
-    if (updatedTask.startDate) {
-      updatedTask.startDate = new Date(updatedTask.startDate);
-    }
-    if (updatedTask.endDate) {
-      updatedTask.endDate = new Date(updatedTask.endDate);
-    }
+      if (validatedBody.startDate) {
+        validatedBody.startDate = new Date(validatedBody.startDate);
+      }
+      if (validatedBody.endDate) {
+        validatedBody.endDate = new Date(validatedBody.endDate);
+      }
 
-    if (currentUserId && updatedTask) {
-      const task = await db
-        .update(tasksTable)
-        .set(updatedTask)
-        .where(
-          and(
-            eq(tasksTable.id, req.params.id),
-            eq(tasksTable.userId, currentUserId)
+      if (currentUserId && validatedBody) {
+        const task = await db
+          .update(tasksTable)
+          .set(validatedBody)
+          .where(
+            and(
+              eq(tasksTable.id, req.params.id),
+              eq(tasksTable.userId, currentUserId)
+            )
           )
-        )
-        .returning();
-      res.json(task[0]);
+          .returning();
+        res.json(task[0]);
+      }
+    } catch (error) {
+      console.error("Database error:", error);
+      return res.status(500).json({ error: "Internal server error" });
     }
-  } catch (error) {
-    console.error("Database error:", error);
-    return res.status(500).json({ error: "Internal server error" });
   }
-});
+);
 
 // DELETE a specific task
 taskRouter.delete(
@@ -108,51 +137,23 @@ taskRouter.delete(
 );
 
 // CREATE a new task
-taskRouter.post("/", authCheck, async function (req: Request, res: Response) {
-  try {
-    const newTask = req.body;
-    const currentUserId = req.userId;
-    if (currentUserId) {
-      const [task] = await db
-        .insert(tasksTable)
-        .values({ ...newTask, userId: currentUserId })
-        .returning();
-
-      res.json({ message: "success", task: task });
-    }
-  } catch (error) {
-    console.error("Database error:", error);
-    return res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-// GET task due on given date
-taskRouter.get(
-  "/due-on/:date",
+taskRouter.post(
+  "/",
   authCheck,
+  validateBody(createTaskSchema),
   async function (req: Request, res: Response) {
     try {
-      const date = new Date(req.params.date);
-      const nextDate = new Date(date);
-      nextDate.setDate(nextDate.getDate() + 1);
-      const currentUserId = req.userId;
-
+      const { userId: currentUserId, validatedBody } = req;
       if (currentUserId) {
-        const tasks = await db
-          .select()
-          .from(tasksTable)
-          .where(
-            and(
-              eq(tasksTable.userId, currentUserId),
-              gte(tasksTable.startDate, date),
-              lt(tasksTable.startDate, nextDate)
-            )
-          );
+        const [task] = await db
+          .insert(tasksTable)
+          .values({ ...validatedBody, userId: currentUserId })
+          .returning();
 
-        res.json({ tasks: tasks });
+        res.json({ message: "success", task: task });
       }
     } catch (error) {
-      console.log("Database error:", error);
+      console.error("Database error:", error);
       return res.status(500).json({ error: "Internal server error" });
     }
   }
