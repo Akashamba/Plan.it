@@ -1,7 +1,7 @@
 import { type Request, type Response, Router } from "express";
 import db from "../db";
 import { tasks as tasksTable } from "../db/schema/task-schema";
-import { and, eq, gte, lt } from "drizzle-orm";
+import { and, eq, gte, ilike, like, lt, or } from "drizzle-orm";
 import { authCheck } from "../utils/auth-check";
 import {
   createTaskSchema,
@@ -23,13 +23,27 @@ taskRouter.get(
 
     if (currentUserId) {
       // Add filters based on query params
-      const filters = [eq(tasksTable.userId, currentUserId)];
+      const filters = [];
+      filters.push(eq(tasksTable.userId, currentUserId));
 
+      // Add date filters
       if (validatedQuery.dueDate) {
         const dueDate = new Date(validatedQuery.dueDate);
         filters.push(
-          gte(tasksTable.startDate, dueDate),
-          lt(tasksTable.startDate, getNextDate(dueDate))
+          and(
+            gte(tasksTable.startDate, dueDate),
+            lt(tasksTable.startDate, getNextDate(dueDate))
+          )
+        );
+      }
+
+      // Add search filters
+      if (validatedQuery.searchQuery) {
+        filters.push(
+          or(
+            ilike(tasksTable.name, `%${validatedQuery.searchQuery}%`),
+            ilike(tasksTable.description, `%${validatedQuery.searchQuery}%`)
+          )
         );
       }
 
