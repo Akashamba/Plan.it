@@ -1,7 +1,7 @@
 import { type Request, type Response, Router } from "express";
 import db from "../db";
 import { tasks as tasksTable } from "../db/schema/task-schema";
-import { and, eq, gte, ilike, like, lt, or } from "drizzle-orm";
+import { and, eq, gte, ilike, lt, or } from "drizzle-orm";
 import { authCheck } from "../utils/auth-check";
 import {
   createTaskSchema,

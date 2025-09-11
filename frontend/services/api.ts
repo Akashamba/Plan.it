@@ -1,6 +1,3 @@
-import { authClient } from "@/lib/auth-client";
-import { Alert } from "react-native";
-
 export const fetchData = async (endpoint: string, session?: string) => {
   const response = await fetch(
     `${process.env.EXPO_PUBLIC_API_URL}${endpoint}`,
