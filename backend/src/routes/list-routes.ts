@@ -10,15 +10,13 @@ listRouter.get("/", authCheck, async function (req: Request, res: Response) {
   try {
     const currentUserId = req.userId;
 
-    if (currentUserId) {
-      const lists = await db
-        .select()
-        .from(listsTable)
-        .where(eq(listsTable.userId, currentUserId));
+    const lists = await db
+      .select()
+      .from(listsTable)
+      .where(eq(listsTable.userId, currentUserId));
 
-      console.log("Getting lists from the database: ", lists.length);
-      res.json({ lists });
-    }
+    console.log("Getting lists from the database: ", lists.length);
+    res.json({ lists });
   } catch (error) {
     console.error("Database error:", error);
     return res.status(500).json({ error: "Internal server error" });
@@ -30,19 +28,17 @@ listRouter.get("/:id", authCheck, async function (req: Request, res: Response) {
   try {
     const currentUserId = req.userId;
 
-    if (currentUserId) {
-      const lists = await db.query.lists.findFirst({
-        where: and(
-          eq(listsTable.userId, currentUserId),
-          eq(listsTable.id, req.params.id)
-        ),
-        with: {
-          tasks: true,
-        },
-      });
+    const lists = await db.query.lists.findFirst({
+      where: and(
+        eq(listsTable.userId, currentUserId),
+        eq(listsTable.id, req.params.id)
+      ),
+      with: {
+        tasks: true,
+      },
+    });
 
-      res.json({ lists });
-    }
+    res.json({ lists });
   } catch (error) {
     console.error("Database error:", error);
     return res.status(500).json({ error: "Internal server error" });
