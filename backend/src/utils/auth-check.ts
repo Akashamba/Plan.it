@@ -18,21 +18,22 @@ export const authCheck = async (
   }
 
   try {
-    const userSession = await db
-      .select()
+    const [userSession] = await db
+      .select({ userId: sessionTable.userId })
       .from(sessionTable)
       .where(
         and(
           eq(sessionTable.token, token),
           gt(sessionTable.expiresAt, new Date())
         )
-      );
+      )
+      .limit(1);
 
-    if (userSession.length === 0) {
+    if (!userSession) {
       return res.status(401).json({ error: "Unauthorized: Invalid token" });
     }
-    req.userId = userSession[0].userId;
-    next();
+    req.userId = userSession.userId;
+    return next();
   } catch (error) {
     console.error("Database error:", error);
     return res.status(500).json({ error: "Internal server error" });

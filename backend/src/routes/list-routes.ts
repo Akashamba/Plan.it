@@ -28,7 +28,7 @@ listRouter.get("/:id", authCheck, async function (req: Request, res: Response) {
   try {
     const currentUserId = req.userId;
 
-    const lists = await db.query.lists.findFirst({
+    const list = await db.query.lists.findFirst({
       where: and(
         eq(listsTable.userId, currentUserId),
         eq(listsTable.id, req.params.id)
@@ -38,7 +38,10 @@ listRouter.get("/:id", authCheck, async function (req: Request, res: Response) {
       },
     });
 
-    res.json({ lists });
+    if (!list) {
+      return res.status(404).json({ error: "List not found" });
+    }
+    return res.json({ list });
   } catch (error) {
     console.error("Database error:", error);
     return res.status(500).json({ error: "Internal server error" });
