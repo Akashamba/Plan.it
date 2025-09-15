@@ -39,7 +39,9 @@ listRouter.get("/:id", authCheck, async function (req: Request, res: Response) {
     });
 
     if (!list) {
-      return res.status(404).json({ error: "List not found" });
+      return res.status(404).json({
+        error: "List not found or you don't have permission to access it",
+      });
     }
     return res.json({ list });
   } catch (error) {

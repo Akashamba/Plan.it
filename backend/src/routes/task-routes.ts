@@ -13,7 +13,7 @@ import { getNextDate } from "../utils/get-next-date.js";
 
 const taskRouter = Router();
 
-// /api/tasks/: GET all tasks of a user (with filters)
+// GET all tasks of a user (with filters) [/api/tasks/]
 taskRouter.get(
   "/",
   authCheck,
@@ -63,7 +63,7 @@ taskRouter.get(
   }
 );
 
-// GET all tasks due on or before today
+// GET all tasks due on or before today [/api/tasks/today]
 taskRouter.get(
   "/today",
   authCheck,
@@ -91,19 +91,27 @@ taskRouter.get(
   }
 );
 
-// GET a specific task
+// GET a specific task [/api/tasks/:id]
 taskRouter.get("/:id", authCheck, async function (req: Request, res: Response) {
   try {
     const currentUserId = req.userId;
     const task = await db
-      .selectDistinct()
+      .select()
       .from(tasksTable)
       .where(
         and(
           eq(tasksTable.id, req.params.id),
           eq(tasksTable.userId, currentUserId)
         )
-      );
+      )
+      .limit(1);
+
+    if (task.length === 0) {
+      return res.status(404).json({
+        error: "Task not found or you don't have permission to access it",
+      });
+    }
+
     res.json(task[0]);
   } catch (error) {
     console.error("Database error:", error);
@@ -111,7 +119,7 @@ taskRouter.get("/:id", authCheck, async function (req: Request, res: Response) {
   }
 });
 
-// UPDATE a specific task
+// UPDATE a specific task [/api/tasks/:id]
 taskRouter.put(
   "/:id",
   authCheck,
@@ -138,6 +146,13 @@ taskRouter.put(
             )
           )
           .returning();
+
+        if (task.length === 0) {
+          return res.status(404).json({
+            error: "Task not found or you don't have permission to update it",
+          });
+        }
+
         res.json(task[0]);
       }
     } catch (error) {
@@ -147,7 +162,7 @@ taskRouter.put(
   }
 );
 
-// DELETE a specific task
+// DELETE a specific task [/api/tasks/:id]
 taskRouter.delete(
   "/:id",
   authCheck,
@@ -165,6 +180,12 @@ taskRouter.delete(
         )
         .returning();
 
+      if (task.length === 0) {
+        return res.status(404).json({
+          error: "Task not found or you don't have permission to delete it",
+        });
+      }
+
       res.json({ task: task });
     } catch (error) {
       console.error("Database error:", error);
@@ -173,7 +194,7 @@ taskRouter.delete(
   }
 );
 
-// CREATE a new task
+// CREATE a new task [/api/tasks/]
 taskRouter.post(
   "/",
   authCheck,
