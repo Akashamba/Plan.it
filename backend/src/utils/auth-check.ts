@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { session as sessionTable } from "../db/schema/auth-schema";
-import db from "../db";
+import { session as sessionTable } from "../db/schema/auth-schema.js";
+import db from "../db/index.js";
 import { and, eq, gt } from "drizzle-orm";
 
 export const authCheck = async (
