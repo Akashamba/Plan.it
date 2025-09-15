@@ -1,7 +1,7 @@
 import { pgTable, text, uuid, timestamp, pgEnum } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
-import { user } from "./auth-schema";
-import { createTable } from "./create-table";
+import { user } from "./auth-schema.js";
+import { createTable } from "./create-table.js";
 
 // Enums
 export const statusEnum = pgEnum("status", ["completed", "not completed"]);

@@ -4,9 +4,9 @@ import express, {
   type NextFunction,
 } from "express";
 import "dotenv/config";
-import db from "./db/index";
-import { user } from "./db/schema/auth-schema";
-import { auth } from "./auth";
+import db from "./db/index.js";
+import { user } from "./db/schema/auth-schema.js";
+import { auth } from "./auth.js";
 import { toNodeHandler } from "better-auth/node";
 import cors from "cors";
 
