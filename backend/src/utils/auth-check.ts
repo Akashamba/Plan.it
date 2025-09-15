@@ -18,7 +18,7 @@ export const authCheck = async (
   }
 
   try {
-    const [userSession] = await db
+    const userSession = await db
       .select({ userId: sessionTable.userId })
       .from(sessionTable)
       .where(
@@ -29,10 +29,10 @@ export const authCheck = async (
       )
       .limit(1);
 
-    if (!userSession) {
+    if (userSession.length === 0) {
       return res.status(401).json({ error: "Unauthorized: Invalid token" });
     }
-    req.userId = userSession.userId;
+    req.userId = userSession[0].userId;
     return next();
   } catch (error) {
     console.error("Database error:", error);
