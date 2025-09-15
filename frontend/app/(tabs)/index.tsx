@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { Alert, Button, Text } from "react-native";
 
 export default function SocialSignIn() {
-  const { data, loading, error } = useFetch(() => fetchData());
+  const { data: generalData } = useFetch(() => fetchData("/", ""));
   const router = useRouter();
   const { data: session } = authClient.useSession();
 
@@ -36,12 +36,12 @@ export default function SocialSignIn() {
 
   return (
     <>
-      <Button title="Login with Google" onPress={handleLogin} />
-      <Button title="Logout" onPress={handleLogOut} />;
-      <Text>{session?.user.name || "no user"}</Text>
-      {loading && <Text>Loading...</Text>}
-      {error && <Text>Error: {error.message}</Text>}
-      {!loading && !error && <Text>{data?.users[0].name}</Text>}
+      {session?.user ? (
+        <Button title="Logout" onPress={handleLogOut} />
+      ) : (
+        <Button title="Login with Google" onPress={handleLogin} />
+      )}
+      {generalData && <Text>{generalData.message}</Text>}
     </>
   );
 }
