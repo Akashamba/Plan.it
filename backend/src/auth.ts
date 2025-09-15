@@ -7,7 +7,7 @@ import {
   user,
   verification,
 } from "./db/schema/auth-schema.js";
-import { expo } from "@better-auth/expo";
+// import { expo } from "@better-auth/expo";
 
 const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = process.env;
 if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
@@ -15,7 +15,7 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
 }
 
 export const auth = betterAuth({
-  plugins: [expo()],
+  // plugins: [expo()],
   database: drizzleAdapter(db, {
     provider: "pg", // or "mysql", "sqlite"
     schema: {
