@@ -1,6 +1,6 @@
 import { text, timestamp, boolean } from "drizzle-orm/pg-core";
 
-import { createTable } from "./create-table";
+import { createTable } from "./create-table.js";
 
 export const user = createTable("user", {
   id: text("id").primaryKey(),

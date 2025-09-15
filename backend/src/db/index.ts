@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { drizzle } from "drizzle-orm/neon-http";
-import * as authSchema from "./schema/auth-schema";
-import * as taskSchema from "./schema/task-schema";
+import * as authSchema from "./schema/auth-schema.js";
+import * as taskSchema from "./schema/task-schema.js";
 
 if (!process.env.DATABASE_URL) {
   throw new Error("DATABASE_URL is not set in environment variables.");

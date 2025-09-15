@@ -1,10 +1,10 @@
 import express, { NextFunction, type Request, type Response } from "express";
 import "dotenv/config";
 
-import { auth } from "./auth";
-import taskRouter from "./routes/task-routes";
+import { auth } from "./auth.js";
+import taskRouter from "./routes/task-routes.js";
 import { toNodeHandler } from "better-auth/node";
-import listRouter from "./routes/list-routes";
+import listRouter from "./routes/list-routes.js";
 
 const app = express();
 

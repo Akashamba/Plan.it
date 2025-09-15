@@ -1,15 +1,15 @@
 import { type Request, type Response, Router } from "express";
-import db from "../db";
-import { tasks as tasksTable } from "../db/schema/task-schema";
+import db from "../db/index.js";
+import { tasks as tasksTable } from "../db/schema/task-schema.js";
 import { and, eq, gte, ilike, lt, or } from "drizzle-orm";
-import { authCheck } from "../utils/auth-check";
+import { authCheck } from "../utils/auth-check.js";
 import {
   createTaskSchema,
   taskQuerySchema,
   updateTaskSchema,
-} from "../schema/task.schema";
-import { validateBody, validateQuery } from "../utils/validation";
-import { getNextDate } from "../utils/get-next-date";
+} from "../schema/task.schema.js";
+import { validateBody, validateQuery } from "../utils/validation.js";
+import { getNextDate } from "../utils/get-next-date.js";
 
 const taskRouter = Router();
 

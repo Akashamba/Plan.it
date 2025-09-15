@@ -1,8 +1,8 @@
 import { type Request, type Response, Router } from "express";
-import db from "../db";
-import { lists as listsTable } from "../db/schema/task-schema";
+import db from "../db/index.js";
+import { lists as listsTable } from "../db/schema/task-schema.js";
 import { and, eq } from "drizzle-orm";
-import { authCheck } from "../utils/auth-check";
+import { authCheck } from "../utils/auth-check.js";
 
 const listRouter = Router();
 

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { priorityEnum, statusEnum } from "../db/schema/task-schema";
+import { priorityEnum, statusEnum } from "../db/schema/task-schema.js";
 
 export const createTaskSchema = z.object({
   name: z.string(),
