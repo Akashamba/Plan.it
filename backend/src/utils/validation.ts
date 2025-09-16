@@ -14,6 +14,19 @@ export const validateQuery =
     }
   };
 
+export const validateParams =
+  (schema: z.ZodType) => (req: Request, res: Response, next: NextFunction) => {
+    try {
+      req.validatedQuery = schema.parse(req.params);
+      next();
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: error.issues });
+      }
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  };
+
 export const validateBody =
   (schema: z.ZodType) => (req: Request, res: Response, next: NextFunction) => {
     try {

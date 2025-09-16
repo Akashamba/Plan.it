@@ -5,10 +5,17 @@ import { and, eq, gte, ilike, lt, or } from "drizzle-orm";
 import { authCheck } from "../utils/auth-check.js";
 import {
   createTaskSchema,
+  deleteTaskSchema,
+  getTaskSchema,
   taskQuerySchema,
-  updateTaskSchema,
+  updateTaskBodySchema,
+  updateTaskParamSchema,
 } from "../schema/task.schema.js";
-import { validateBody, validateQuery } from "../utils/validation.js";
+import {
+  validateBody,
+  validateParams,
+  validateQuery,
+} from "../utils/validation.js";
 import { getNextDate } from "../utils/get-next-date.js";
 
 const taskRouter = Router();
@@ -63,7 +70,7 @@ taskRouter.get(
   }
 );
 
-// GET all tasks due on or before today [/api/tasks/today]
+// GET all tasks due on or before today (due before tomorrow) [/api/tasks/today]
 taskRouter.get(
   "/today",
   authCheck,
@@ -92,38 +99,44 @@ taskRouter.get(
 );
 
 // GET a specific task [/api/tasks/:id]
-taskRouter.get("/:id", authCheck, async function (req: Request, res: Response) {
-  try {
-    const currentUserId = req.userId;
-    const task = await db
-      .select()
-      .from(tasksTable)
-      .where(
-        and(
-          eq(tasksTable.id, req.params.id),
-          eq(tasksTable.userId, currentUserId)
+taskRouter.get(
+  "/:id",
+  authCheck,
+  validateParams(getTaskSchema),
+  async function (req: Request, res: Response) {
+    try {
+      const currentUserId = req.userId;
+      const task = await db
+        .select()
+        .from(tasksTable)
+        .where(
+          and(
+            eq(tasksTable.id, req.params.id),
+            eq(tasksTable.userId, currentUserId)
+          )
         )
-      )
-      .limit(1);
+        .limit(1);
 
-    if (task.length === 0) {
-      return res.status(404).json({
-        error: "Task not found or you don't have permission to access it",
-      });
+      if (task.length === 0) {
+        return res.status(404).json({
+          error: "Task not found or you don't have permission to access it",
+        });
+      }
+
+      res.json(task[0]);
+    } catch (error) {
+      console.error("Database error:", error);
+      return res.status(500).json({ error: "Internal server error" });
     }
-
-    res.json(task[0]);
-  } catch (error) {
-    console.error("Database error:", error);
-    return res.status(500).json({ error: "Internal server error" });
   }
-});
+);
 
 // UPDATE a specific task [/api/tasks/:id]
 taskRouter.put(
   "/:id",
   authCheck,
-  validateBody(updateTaskSchema),
+  validateParams(updateTaskParamSchema),
+  validateBody(updateTaskBodySchema),
   async function (req: Request, res: Response) {
     try {
       const { userId: currentUserId, validatedBody } = req;
@@ -166,6 +179,7 @@ taskRouter.put(
 taskRouter.delete(
   "/:id",
   authCheck,
+  validateParams(deleteTaskSchema),
   async function (req: Request, res: Response) {
     try {
       const currentUserId = req.userId;
@@ -186,7 +200,7 @@ taskRouter.delete(
         });
       }
 
-      res.json({ task: task });
+      res.json({ message: "success", task: task });
     } catch (error) {
       console.error("Database error:", error);
       return res.status(500).json({ error: "Internal server error" });

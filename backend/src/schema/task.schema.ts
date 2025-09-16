@@ -11,7 +11,7 @@ export const createTaskSchema = z.object({
   endDate: z.iso.datetime().optional(),
 });
 
-export const updateTaskSchema = createTaskSchema.partial();
+export const updateTaskBodySchema = createTaskSchema.partial();
 
 export const taskQuerySchema = z.object({
   dueDate: z.iso.datetime().optional(),
@@ -24,3 +24,13 @@ export const taskQuerySchema = z.object({
   //   priority: ...,
   //   status: ...
 });
+
+export const getTaskSchema = z.object({
+  id: z.uuid(),
+});
+
+export const updateTaskParamSchema = getTaskSchema.extend({});
+
+export const deleteTaskSchema = getTaskSchema.extend({});
+
+export const getListSchema = getTaskSchema.extend({});
