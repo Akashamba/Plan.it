@@ -32,8 +32,5 @@ export const auth = betterAuth({
       clientSecret: GOOGLE_CLIENT_SECRET,
     },
   },
-  trustedOrigins: (process.env.TRUSTED_ORIGINS ?? "")
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean),
+  trustedOrigins: [""],
 });
