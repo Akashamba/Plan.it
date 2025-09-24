@@ -1,12 +1,18 @@
 import { authClient } from "@/lib/auth-client";
-import { fetchData } from "@/services/api";
+import { publicFetchData } from "@/services/api";
 import useFetch from "@/services/hooks";
 import { useRouter } from "expo-router";
 import { useEffect } from "react";
 import { Alert, Button, Text } from "react-native";
 
+interface publicDataType {
+  message: string;
+}
+
 export default function SocialSignIn() {
-  const { data: generalData } = useFetch(() => fetchData("/", ""));
+  const { data: publicData } = useFetch(() =>
+    publicFetchData<publicDataType>("/")
+  );
   const router = useRouter();
   const { data: session } = authClient.useSession();
 
@@ -41,7 +47,7 @@ export default function SocialSignIn() {
       ) : (
         <Button title="Login with Google" onPress={handleLogin} />
       )}
-      {generalData && <Text>{generalData.message}</Text>}
+      {publicData && <Text>{publicData.message}</Text>}
     </>
   );
 }

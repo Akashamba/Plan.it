@@ -2,13 +2,32 @@ import { Alert, Button, StyleSheet, Text, View } from "react-native";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "expo-router";
 import useFetch from "@/services/hooks";
-import { fetchData } from "@/services/api";
+import { authedFetchData } from "@/services/api";
+
+// temp interfaces
+interface Task {
+  id: "string";
+  name: "string";
+  userId: "string";
+  status: "completed" | "not completed";
+  description: "string";
+  priority: "low" | "medium" | "high";
+  listId: "string";
+  startDate: Date;
+  endDate: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface Tasks {
+  tasks: Task[];
+}
 
 export default function Dashboard() {
   const session = authClient.useSession();
 
   const { data, loading, error } = useFetch(() =>
-    fetchData("/api/task/all", session.data?.session.token)
+    authedFetchData<Tasks>("/api/tasks/")
   );
 
   const router = useRouter();
@@ -35,7 +54,7 @@ export default function Dashboard() {
       <Text style={styles.title}>Authed User</Text>
       <Text>Redireted from Auth!</Text>
       <Text>{session?.data?.user.name || "no user"}</Text>
-      <Button title="Logout" onPress={handleLogOut} />;
+      <Button title="Logout" onPress={handleLogOut} />
       {loading && <Text>Loading...</Text>}
       {error && <Text>Error: {error.message}</Text>}
       {!loading && !error && data?.tasks && (
