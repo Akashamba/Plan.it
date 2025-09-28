@@ -1,6 +1,7 @@
+import { authClient } from "@/lib/auth-client";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "@/global.css";
@@ -14,6 +15,7 @@ export {
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const router = useRouter();
   const [loaded, error] = useFonts({
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
@@ -26,9 +28,21 @@ export default function RootLayout() {
   }, [error]);
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
+    const init = async () => {
+      if (loaded) {
+        const { data: session } = await authClient.getSession();
+
+        if (session?.session.token) {
+          router.replace("/(tabs)");
+        } else {
+          router.replace("/sign-in");
+        }
+
+        await SplashScreen.hideAsync();
+      }
+    };
+
+    init();
   }, [loaded]);
 
   if (!loaded) {
@@ -42,6 +56,7 @@ function RootLayoutNav() {
   return (
     <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="sign-in" options={{ headerShown: false }} />
     </Stack>
   );
 }
