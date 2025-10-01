@@ -1,4 +1,5 @@
-import { Button, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { Button, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useEffect } from "react";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "expo-router";
