@@ -26,7 +26,7 @@ const SignIn = () => {
       <Text>✅ Plan.it</Text>
       <View style={styles.heroImage}></View>
       <Button title="Login with Google" onPress={handleLogin} />
-      <Text>By continuing you agree to Plan.it's terms and services</Text>
+      <Text>By continuing you agree to Plan.it&apos;s terms and services</Text>
     </SafeAreaView>
   );
 };

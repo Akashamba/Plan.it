@@ -1,7 +1,5 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect } from "react";
-import { authClient } from "@/lib/auth-client";
-import { useRouter } from "expo-router";
+import { Text, View } from "react-native";
+import React from "react";
 
 const Index = () => {
   return (
@@ -13,4 +11,4 @@ const Index = () => {
 
 export default Index;
 
-const styles = StyleSheet.create({});
+// const styles = StyleSheet.create({});
