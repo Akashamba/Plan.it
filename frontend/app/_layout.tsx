@@ -33,7 +33,7 @@ export default function RootLayout() {
         const { data: session } = await authClient.getSession();
 
         if (session?.session.token) {
-          router.replace("/(tabs)");
+          router.replace("/(tabs)/today");
         } else {
           router.replace("/sign-in");
         }
@@ -55,6 +55,10 @@ export default function RootLayout() {
 function RootLayoutNav() {
   return (
     <Stack>
+      <Stack.Screen
+        name="settings"
+        options={{ headerShown: false, presentation: "modal" }}
+      />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="sign-in" options={{ headerShown: false }} />
     </Stack>

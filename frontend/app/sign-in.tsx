@@ -10,7 +10,7 @@ const SignIn = () => {
 
   useEffect(() => {
     if (session) {
-      router.push("/(tabs)");
+      router.push("/(tabs)/today");
     }
   }, [session]);
 
@@ -26,6 +26,8 @@ const SignIn = () => {
     <SafeAreaView style={styles.container}>
       <Text>✅ Plan.it</Text>
       <View style={styles.heroImage}></View>
+      <Text>Organize your work and</Text>
+      <Text>life, finally.</Text>
       <Button title="Login with Google" onPress={handleLogin} />
       <Text>By continuing you agree to Plan.it&apos;s terms and services</Text>
     </SafeAreaView>
