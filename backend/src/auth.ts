@@ -15,8 +15,8 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
 }
 
 export const auth = betterAuth({
-  // @ts-ignore
-  plugins: [expo()],
+  // casting expo() to any to deal with ts mismatch between local and prod (vercel)
+  plugins: [expo() as any],
   database: drizzleAdapter(db, {
     provider: "pg", // or "mysql", "sqlite"
     schema: {
