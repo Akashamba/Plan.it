@@ -19,7 +19,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: pnpm ci
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9 # or whatever version you use (e.g. 8.x if older)
+          run_install: false
+
+      - run: pnpm install --frozen-lockfile
       - run: pnpm run lint
       - run: pnpm tsc --version
       - run: pnpm run typecheck
@@ -35,7 +40,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: pnpm ci
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9 # or whatever version you use (e.g. 8.x if older)
+          run_install: false
+
+      - run: pnpm install --frozen-lockfile
       - run: pnpm run lint
       - run: pnpm tsc --version
       - run: pnpm run typecheck
