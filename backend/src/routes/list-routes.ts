@@ -6,7 +6,7 @@ import { authCheck } from "../utils/auth-check.js";
 import { validateParams } from "../utils/validation.js";
 import { getListSchema } from "../schema/task.schema.js";
 
-const listRouter = Router();
+const listRouter: Router = Router();
 
 listRouter.get("/", authCheck, async function (req: Request, res: Response) {
   try {

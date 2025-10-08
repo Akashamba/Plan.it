@@ -18,7 +18,7 @@ import {
 } from "../utils/validation.js";
 import { getNextDate } from "../utils/get-next-date.js";
 
-const taskRouter = Router();
+const taskRouter: Router = Router();
 
 // GET all tasks of a user (with filters) [/api/tasks/]
 taskRouter.get(
