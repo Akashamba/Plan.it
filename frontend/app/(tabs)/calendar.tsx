@@ -3,8 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 export default function TabTwoScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
-      <Text>Redireted from Auth!</Text>
+      <Text style={styles.title}>Coming Soon!</Text>
     </View>
   );
 }

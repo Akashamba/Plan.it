@@ -30,31 +30,11 @@ export default function Dashboard() {
     authedFetchData<Tasks>("/api/tasks/")
   );
 
-  const router = useRouter();
-
-  const handleLogOut = async () => {
-    await authClient.signOut({
-      fetchOptions: {
-        onSuccess: () => {
-          Alert.alert(
-            "signed out",
-            "",
-            [{ text: "OK", onPress: () => router.push("/") }],
-            {
-              cancelable: false,
-            }
-          );
-        },
-      },
-    });
-  };
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Authed User</Text>
       <Text>Redireted from Auth!</Text>
       <Text>{session?.data?.user.name || "no user"}</Text>
-      <Button title="Logout" onPress={handleLogOut} />
       {loading && <Text>Loading...</Text>}
       {error && <Text>Error: {error.message}</Text>}
       {!loading && !error && data?.tasks && (

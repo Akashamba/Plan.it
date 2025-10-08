@@ -13,25 +13,40 @@ function TabBarIcon(props: {
 export default function TabLayout() {
   return (
     <Tabs
-      screenOptions={
-        {
-          // Disable the static render of the header on web
-          // to prevent a hydration error in React Navigation v6.
-        }
-      }
+      screenOptions={{
+        // Disable the static render of the header on web
+        // to prevent a hydration error in React Navigation v6.
+        headerShown: false,
+      }}
     >
       <Tabs.Screen
-        name="index"
+        name="today"
         options={{
-          title: "Tab One",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: "Today",
+          tabBarIcon: ({ color }) => <TabBarIcon name="square" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="calendar"
         options={{
-          title: "Tab Two",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: "Calendar",
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="calendar" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="browse"
+        options={{
+          title: "Browse",
+          tabBarIcon: ({ color }) => <TabBarIcon name="list" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="search"
+        options={{
+          title: "Search",
+          tabBarIcon: ({ color }) => <TabBarIcon name="search" color={color} />,
         }}
       />
     </Tabs>
