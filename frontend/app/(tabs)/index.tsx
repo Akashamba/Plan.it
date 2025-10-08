@@ -3,7 +3,7 @@ import { publicFetchData } from "@/services/api";
 import useFetch from "@/services/hooks";
 import { useRouter } from "expo-router";
 import { useEffect } from "react";
-import { Alert, Button, Text } from "react-native";
+import { Alert, Button, Text, View } from "react-native";
 
 interface publicDataType {
   message: string;
@@ -48,6 +48,11 @@ export default function SocialSignIn() {
         <Button title="Login with Google" onPress={handleLogin} />
       )}
       {publicData && <Text>{publicData.message}</Text>}
+      <View className="flex-1 items-center justify-center bg-white">
+        <Text className="text-xl font-bold text-blue-500">
+          Welcome to Nativewind!
+        </Text>
+      </View>
     </>
   );
 }
